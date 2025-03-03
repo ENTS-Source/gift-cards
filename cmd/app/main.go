@@ -21,6 +21,10 @@ type config struct {
 }
 
 func main() {
+	log.SetOutput(os.Stdout)
+	log.SetPrefix("[gift-cards] ")
+	log.SetFlags(log.LstdFlags | log.Lshortfile | log.Lmicroseconds)
+
 	var c config
 	err := envconfig.Process("mlp", &c)
 	if err != nil {
