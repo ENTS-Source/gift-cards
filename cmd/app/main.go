@@ -26,7 +26,7 @@ func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile | log.Lmicroseconds)
 
 	var c config
-	err := envconfig.Process("mlp", &c)
+	err := envconfig.Process("gc", &c)
 	if err != nil {
 		log.Fatal(err)
 	}
