@@ -21,6 +21,15 @@ func SetupWeb() string {
 	return webPath
 }
 
+func SetupMigrations() string {
+	webPath, err := os.MkdirTemp(os.TempDir(), "migrations")
+	if err != nil {
+		log.Fatal(err)
+	}
+	extractPrefixTo("migrations", webPath)
+	return webPath
+}
+
 func extractPrefixTo(pathName string, destination string) {
 	for f, b64 := range f2CompressedFiles {
 		if !strings.HasPrefix(f, pathName) {

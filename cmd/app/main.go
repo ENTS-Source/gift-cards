@@ -8,6 +8,7 @@ import (
 
 	"github.com/ents-source/gift-cards/api"
 	"github.com/ents-source/gift-cards/assets"
+	"github.com/ents-source/gift-cards/database"
 	"github.com/ents-source/go-amember-api/amember"
 	"github.com/kelseyhightower/envconfig"
 )
@@ -18,6 +19,8 @@ type config struct {
 	AmpApiKey     string `envconfig:"amp_api_key"`
 	AmpApiKeyFile string `envconfig:"amp_api_key_file"`
 	AmpApiUrl     string `envconfig:"amp_api_url"`
+
+	DataDir string `envconfig:"data_dir" default:"./data"`
 }
 
 func main() {
@@ -38,7 +41,18 @@ func main() {
 		webPath = "./web"
 	}
 
+	migrationsPath := assets.SetupMigrations()
+	if devMode {
+		migrationsPath = "./migrations"
+	}
+
 	paymentsApi := amember.NewClient(c.AmpApiUrl, getPassword(c.AmpApiKey, c.AmpApiKeyFile))
+	db, err := database.NewDatabase(c.DataDir, migrationsPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	card, err := db.GetOrCreateCard("test")
+	log.Println(card, err)
 
 	wg := api.Start(c.HttpBind, webPath, paymentsApi)
 

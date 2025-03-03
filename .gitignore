@@ -2,7 +2,7 @@
 /bin
 /pkg
 /logs
-/controller.db
+/data
 
 # Generated files
 assets.bin.go
